@@ -1,0 +1,22 @@
+From f028aca703ebab0c55db7e148219639c92f76c6d Mon Sep 17 00:00:00 2001
+From: dtodoroff <d.todorov@vekatech.com>
+Date: Tue, 15 Jul 2025 15:57:33 +0300
+Subject: [PATCH 5/8] resolve problem with endpoint maxpacket while receiving
+
+
+diff --git a/drivers/usb/gadget/f_fastboot.c b/drivers/usb/gadget/f_fastboot.c
+index 8ba55aab9f..1fcffaf9dd 100644
+--- a/drivers/usb/gadget/f_fastboot.c
++++ b/drivers/usb/gadget/f_fastboot.c
+@@ -427,7 +427,7 @@ static unsigned int rx_bytes_expected(struct usb_ep *ep)
+ {
+ 	int rx_remain = fastboot_data_remaining();
+ 	unsigned int rem;
+-	unsigned int maxpacket = usb_endpoint_maxp(ep->desc);
++	unsigned int maxpacket = ep->maxpacket;
+ 
+ 	if (rx_remain <= 0)
+ 		return 0;
+-- 
+2.43.0
+

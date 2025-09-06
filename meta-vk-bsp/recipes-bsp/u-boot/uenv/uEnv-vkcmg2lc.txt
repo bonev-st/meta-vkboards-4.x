@@ -1,0 +1,10 @@
+# Refer to readme.txt for more information on setting up U-Boot Env 
+
+#fdt_extra_overlays=1.dtbo 2.dtbo 3.dtbo
+#fdt_extra_overlays=vkrz-dsi-kd070hdfia030.dtbo
+fdt_extra_overlays=vkrz-dsi-kd101wxfid045.dtbo
+
+#ethaddr=aa:bb:cc:aa:bb:cc
+
+#extrabootargs=systemd.unified_cgroup_hierarchy=0 systemd.legacy_systemd_cgroup_controller
+

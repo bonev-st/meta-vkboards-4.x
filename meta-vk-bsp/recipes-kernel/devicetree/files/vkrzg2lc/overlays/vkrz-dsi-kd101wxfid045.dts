@@ -1,0 +1,62 @@
+/*
+ * Copyright 2023 Vekatech
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
+#include <dt-bindings/gpio/gpio.h>
+
+&du {
+	status = "okay";
+};
+
+&dsi {
+	status = "okay";
+	ports {
+		port@1 {
+			dsi0_out: endpoint {
+				remote-endpoint = <&panel_in>;
+			};
+		};
+	};
+};
+
+&mipi_panel {
+	status = "okay";
+	compatible = "vekatech,vklcd-kd101wxfid045","fitipower,ek79202d";
+
+	reset-gpios = <&pinctrl RZG2L_GPIO(22, 1) (GPIO_ACTIVE_LOW|GPIO_OPEN_DRAIN)>;
+	lcd-model = "kd101wxfid045";
+	dsi-lanes = <4>;
+	video-mode = <2>;
+	port {
+		panel_in: endpoint {
+			remote-endpoint = <&dsi0_out>;
+		};
+	};
+};
+
+&gpt3 {
+	status = "okay";
+};
+
+&backlight {
+	status = "okay";
+};
+
+&ft5626 {
+	status = "okay";
+	reset-gpios = <&pinctrl RZG2L_GPIO(4, 1) GPIO_ACTIVE_LOW>;
+};
