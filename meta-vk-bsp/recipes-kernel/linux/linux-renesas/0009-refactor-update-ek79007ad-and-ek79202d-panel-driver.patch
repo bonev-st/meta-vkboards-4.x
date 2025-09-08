@@ -1,0 +1,101 @@
+From 57d4bdf8e738b48be0896dbd092a4d9863a4170c Mon Sep 17 00:00:00 2001
+From: Stanimir Bonev <stanimir@x-cas.eu>
+Date: Mon, 8 Sep 2025 11:49:36 +0300
+Subject: [PATCH] refactor: update ek79007ad and ek79202d panel driver
+
+---
+ drivers/gpu/drm/panel/panel-fitipower-ek79007ad.c |  9 ++++-----
+ drivers/gpu/drm/panel/panel-fitipower-ek79202d.c  | 10 ++++------
+ 2 files changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-fitipower-ek79007ad.c b/drivers/gpu/drm/panel/panel-fitipower-ek79007ad.c
+index be70ff601c26..b12c9b91f16f 100644
+--- a/drivers/gpu/drm/panel/panel-fitipower-ek79007ad.c
++++ b/drivers/gpu/drm/panel/panel-fitipower-ek79007ad.c
+@@ -90,6 +90,7 @@ static int ek79007ad_send_cmd_data(struct ek79007ad* ctx, u8 cmd, u8 data) {
+ 	return 0;
+ }
+ 
++#ifdef DEBUG
+ static int ek79007ad_read_cmd_data(struct ek79007ad* tftcp, u8 cmd) {
+ 	u8 buf = 0;
+ 	int ret;
+@@ -101,7 +102,7 @@ static int ek79007ad_read_cmd_data(struct ek79007ad* tftcp, u8 cmd) {
+ 
+ 	return buf;
+ }
+-#ifdef DEBUG
++
+ static void ek79007ad_dump_reg(struct ek79007ad* ctx) {
+ 	unsigned int i;
+ 	typedef struct _DumpData_t{
+@@ -308,7 +309,7 @@ static int ek79007ad_dsi_probe(struct mipi_dsi_device* dsi) {
+ 		dev_notice(&dsi->dev, "Initialize Vekatech VKLCD07 display\n");
+ 	}
+ 
+-    if (vklcd_kd070hdfia030_desc == ctx->desc->init ) {
++    if (ek79007ad_init_vklcd_kd070hdfia030 == ctx->desc->init ) {
+         dev_notice(&dsi->dev, "Initialize Vekatech KD070HDFIA030 display\n");
+     }
+ 
+@@ -368,13 +369,11 @@ static int ek79007ad_dsi_probe(struct mipi_dsi_device* dsi) {
+ 	return ret;
+ }
+ 
+-static int ek79007ad_dsi_remove(struct mipi_dsi_device* dsi) {
++static void ek79007ad_dsi_remove(struct mipi_dsi_device* dsi) {
+ 	struct ek79007ad* ctx = mipi_dsi_get_drvdata(dsi);
+ 
+ 	mipi_dsi_detach(dsi);
+ 	drm_panel_remove(&ctx->panel);
+-
+-	return 0;
+ }
+ 
+ static const struct ek79007ad_desc vklcd07_desc = {
+diff --git a/drivers/gpu/drm/panel/panel-fitipower-ek79202d.c b/drivers/gpu/drm/panel/panel-fitipower-ek79202d.c
+index a3198624db1c..3ce1fd57dc58 100644
+--- a/drivers/gpu/drm/panel/panel-fitipower-ek79202d.c
++++ b/drivers/gpu/drm/panel/panel-fitipower-ek79202d.c
+@@ -4,6 +4,8 @@
+  * Modified: Daniel Wu
+  */
+ 
++// #define DEBUG
++
+ //#include <linux/backlight.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+@@ -26,8 +28,6 @@
+ 
+ #include <linux/errname.h>
+ 
+-//#define DEBUG
+-
+ // Add for switch panel function
+ struct ek79202d_desc {
+ 	const struct ek79202d_init_cmd* init;
+@@ -168,7 +168,7 @@ static int ek79202d_prepare(struct drm_panel* panel) {
+     gpiod_set_value_cansleep(ctx->gpio.power, 1);
+     msleep(20);
+     gpiod_set_value_cansleep(ctx->gpio.enable, 1);
+-    gpiod_set_value_cansleep(ctx->gpio.reset, 0);    
++    gpiod_set_value_cansleep(ctx->gpio.reset, 0);
+     msleep(20);
+ 
+ 	/* And reset it */
+@@ -420,13 +420,11 @@ static int ek79202d_dsi_probe(struct mipi_dsi_device* dsi) {
+ 	return ret;
+ }
+ 
+-static int ek79202d_dsi_remove(struct mipi_dsi_device* dsi) {
++static void ek79202d_dsi_remove(struct mipi_dsi_device* dsi) {
+ 	struct ek79202d* ctx = mipi_dsi_get_drvdata(dsi);
+ 
+ 	mipi_dsi_detach(dsi);
+ 	drm_panel_remove(&ctx->panel);
+-
+-	return 0;
+ }
+ 
+ // Add for switch panel function

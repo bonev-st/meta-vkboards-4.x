@@ -6,6 +6,7 @@ SRCREV = "018d7cdec80ede56e8f398c39198568098d0359c"
 SRC_URI:append = " \
 	file://0001-update-some-Macronix-device-names-against-jedec-ID.patch \
 	file://0002-add-fitipower-ek79xxx-panel-drivers.patch \
+	file://0009-refactor-update-ek79007ad-and-ek79202d-panel-driver.patch \
 "
 
 #SRC_URI:append:vkrzg2lc = " \
