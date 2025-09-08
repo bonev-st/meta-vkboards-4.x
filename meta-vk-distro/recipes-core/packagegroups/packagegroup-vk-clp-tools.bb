@@ -30,10 +30,14 @@ RDEPENDS:packagegroup-vk-clp-tools-base = " \
 	tcf-agent \
 	watchdog \
 	mmc-utils \
-	"
+"
 
 RDEPENDS:packagegroup-vk-clp-tools-utils = " \
-        libgpiod \
+    libgpiod \
 	libubootenv \
-        libubootenv-bin \
-	"
+    libubootenv-bin \
+    openssh-sshd \
+    openssh-sftp-server \
+    openssh-keygen \
+	rsync \
+"
