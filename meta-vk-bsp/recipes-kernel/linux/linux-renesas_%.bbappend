@@ -37,7 +37,6 @@ SRC_URI += " \
 SRC_URI += " ${@oe.utils.conditional("CONFIG_HASSI", "1", " file://docker.cfg file://apparmor.cfg ", "", d)} "
 
 SRC_URI:append:vkrzg2lc = " \
-	file://BOARD_VKRZG2LC.cfg \
 	file://GT911.cfg \
 	file://FT5X06.cfg \
 	file://PANEL_ILITEK_ILI9881C.cfg \
@@ -45,5 +44,6 @@ SRC_URI:append:vkrzg2lc = " \
 	file://SND_SOC_DA7213.cfg \
 	file://SND_SEQ.cfg \
 	file://CIFS.cfg \
-	" 
+	file://BOARD_VKRZG2LC.cfg \
+	"
 

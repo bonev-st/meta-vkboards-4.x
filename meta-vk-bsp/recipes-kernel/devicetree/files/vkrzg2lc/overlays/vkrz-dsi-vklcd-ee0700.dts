@@ -27,6 +27,7 @@
 	ports {
 		port@1 {
 			dsi0_out: endpoint {
+				data-lanes = <1 2 3 4>;
 				remote-endpoint = <&panel_in>;
 			};
 		};
