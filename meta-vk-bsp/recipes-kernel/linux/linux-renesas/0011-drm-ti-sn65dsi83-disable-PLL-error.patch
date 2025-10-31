@@ -1,0 +1,43 @@
+From 117f33612229db639220348c8ac5b14228c10333 Mon Sep 17 00:00:00 2001
+From: Stanimir Bonev <stanimir@x-cas.eu>
+Date: Fri, 31 Oct 2025 09:02:04 +0200
+Subject: [PATCH] drm: ti-sn65dsi83: disable PLL error
+
+---
+ drivers/gpu/drm/bridge/ti-sn65dsi83.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+index 52008a72bd49..04d01bebc791 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+@@ -474,13 +474,14 @@ static void sn65dsi83_atomic_pre_enable(struct drm_bridge *bridge,
+ 	ret = regmap_read_poll_timeout(ctx->regmap, REG_RC_LVDS_PLL, pval,
+ 				       pval & REG_RC_LVDS_PLL_PLL_EN_STAT,
+ 				       1000, 100000);
++#if 0
+ 	if (ret) {
+ 		dev_err(ctx->dev, "failed to lock PLL, ret=%i\n", ret);
+ 		/* On failure, disable PLL again and exit. */
+ 		regmap_write(ctx->regmap, REG_RC_PLL_EN, 0x00);
+ 		return;
+ 	}
+-
++#endif
+ 	/* Trigger reset after CSR register update. */
+ 	regmap_write(ctx->regmap, REG_RC_RESET, REG_RC_RESET_SOFT_RESET);
+ 
+@@ -501,8 +502,10 @@ static void sn65dsi83_atomic_enable(struct drm_bridge *bridge,
+ 	/* Wait for 1ms and check for errors in status register */
+ 	usleep_range(1000, 1100);
+ 	regmap_read(ctx->regmap, REG_IRQ_STAT, &pval);
++#if 0
+ 	if (pval)
+ 		dev_err(ctx->dev, "Unexpected link status 0x%02x\n", pval);
++#endif
+ }
+ 
+ static void sn65dsi83_atomic_disable(struct drm_bridge *bridge,
+-- 
+2.34.1
+

@@ -1,0 +1,108 @@
+     /*
+ * Copyright 2023 Vekatech
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	compatible = "vekatech,vkrzg2lc", "renesas,r9a07g044";
+
+	fragment@5 {
+		target-path = "/";
+		__overlay__ {
+			lvds_panel:lvds_panel {
+				status = "okay";
+				compatible = "innolux,n156bge-l21";
+
+				power-supply = <&reg_5p0v>;
+				backlight = <&backlight>;
+
+				port {
+					panel_in_a: endpoint {
+						remote-endpoint = <&bridge_out_a>;
+					};
+				};
+			};
+		};
+	};
+};
+
+&i2c1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	bridge@2c {
+		status = "okay";
+		compatible = "ti,sn65dsi84";
+
+		reg = <0x2c>;
+		enable-gpios = <&pinctrl RZG2L_GPIO(4, 1) GPIO_ACTIVE_HIGH>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				bridge_in: endpoint {
+					remote-endpoint = <&dsi0_out>;
+					data-lanes = <1 2 3 4>;
+				};
+			};
+
+			port@2 {
+				reg = <2>;
+				bridge_out_a: endpoint {
+					remote-endpoint = <&panel_in_a>;
+				};
+			};
+			// port@3 {
+			// 	reg = <3>;
+			// 	bridge_out_b: endpoint {
+			// 		remote-endpoint = <&panel_in_b>;
+			// 	};
+			// };
+		};
+	};
+};
+
+&du {
+	status = "okay";
+};
+
+&dsi {
+	status = "okay";
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		port@1 {
+			reg = <1>;
+			dsi0_out: endpoint {
+				data-lanes = <1 2 3 4>;
+				remote-endpoint = <&bridge_in>;
+			};
+		};
+	};
+};
+
+&gpt3 {
+	status = "okay";
+};
+
+&backlight {
+	status = "okay";
+};
