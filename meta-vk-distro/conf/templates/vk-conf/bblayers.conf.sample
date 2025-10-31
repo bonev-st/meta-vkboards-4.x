@@ -17,5 +17,6 @@ BBLAYERS ?= " \
   ${TOPDIR}/../meta-renesas/meta-rz-bsp \
   ${TOPDIR}/../meta-renesas/meta-rz-distro \
   ${TOPDIR}/../meta-vkboards/meta-vk-bsp \
-  ${TOPDIR}/../meta-vkboards/meta-vk-distro \  
+  ${TOPDIR}/../meta-vkboards/meta-vk-distro \
+  ${TOPDIR}/../meta-rz-features/meta-rz-graphics \
   "
