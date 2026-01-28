@@ -1,0 +1,152 @@
+     /*
+ * Copyright 2023 Vekatech
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/interrupt-controller/irqc-rzg2l.h>
+
+/ {
+	compatible = "vekatech,vkrzg2lc", "renesas,r9a07g044";
+
+	fragment@7 {
+		target-path = "/";
+		__overlay__ {
+			// edp_panel:edp_panel {
+			// 	status = "okay";
+			// 	compatible = "auo,b140han06";
+
+			// 	power-supply = <&reg_5p0v>;
+			// 	backlight = <&backlight>;
+
+			// 	port {
+			// 		panel_in: endpoint {
+			// 			remote-endpoint = <&bridge_out>;
+			// 		};
+			// 	};
+			// };
+
+			edp_1v2: vdd-1p2v {
+				compatible = "regulator-fixed";
+				regulator-name = "edp_1v2";
+				regulator-min-microvolt = <1200000>;
+				regulator-max-microvolt = <1200000>;
+				regulator-always-on;
+			};
+			edp_1v8: vdd-1p8v {
+				compatible = "regulator-fixed";
+				regulator-name = "edp_1v8";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-always-on;
+			};
+			dsi_pwr_en: dsi-pwr-en {
+				compatible = "regulator-fixed";
+				regulator-name = "dsi-pwr-en";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				gpio = <&pinctrl RZG2L_GPIO(45, 1) GPIO_ACTIVE_HIGH>;
+				enable-active-high;
+				regulator-always-on;
+			};
+		};
+	};
+};
+
+&i2c1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	bridge@2c {
+		status = "okay";
+		compatible = "ti,sn65dsi86";
+
+		reg = <0x2c>;
+		enable-gpios = <&pinctrl RZG2L_GPIO(22, 1) GPIO_ACTIVE_HIGH>;
+
+		interrupt-parent = <&pinctrl>;
+		interrupts = <RZG2L_GPIO(45, 2) IRQ_TYPE_LEVEL_LOW>;
+		irq-gpios = <&pinctrl RZG2L_GPIO(45, 2) GPIO_ACTIVE_HIGH>;
+
+		vccio-supply = <&edp_1v8>;
+		vpll-supply = <&edp_1v8>;
+		vcca-supply = <&edp_1v2>;
+		vcc-supply = <&edp_1v2>;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				bridge_in: endpoint {
+					remote-endpoint = <&dsi0_out>;
+					data-lanes = <1 2 3 4>;
+				};
+			};
+
+			port@1 {
+				reg = <1>;
+				bridge_out: endpoint {
+					data-lanes = <0 1>;
+					remote-endpoint = <&panel_in>;
+				};
+			};
+		};
+
+		aux-bus {
+			panel {
+				compatible = "auo,b140han06";
+				power-supply = <&dsi_pwr_en>;
+				backlight = <&backlight>;
+				port {
+					panel_in: endpoint {
+						remote-endpoint = <&bridge_out>;
+					};
+				};
+			};
+        };
+	};
+};
+
+&du {
+	status = "okay";
+};
+
+&dsi {
+	status = "okay";
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		port@1 {
+			reg = <1>;
+			dsi0_out: endpoint {
+				data-lanes = <1 2 3 4>;
+				remote-endpoint = <&bridge_in>;
+			};
+		};
+	};
+};
+
+&gpt3 {
+	status = "okay";
+};
+
+&backlight {
+	status = "okay";
+	enable-gpios = <&pinctrl RZG2L_GPIO(45, 0) GPIO_ACTIVE_HIGH>;
+};
