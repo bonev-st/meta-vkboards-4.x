@@ -28,40 +28,52 @@
 		__overlay__ {
 			// edp_panel:edp_panel {
 			// 	status = "okay";
-			// 	compatible = "auo,b140han06";
-
-			// 	power-supply = <&reg_5p0v>;
+			// 	compatible = "boe,nv156fhm-n42";
+			// 	power-supply = <&dsi_pwr>;
 			// 	backlight = <&backlight>;
-
+			// 	data-lanes = <0 1>;
 			// 	port {
 			// 		panel_in: endpoint {
 			// 			remote-endpoint = <&bridge_out>;
 			// 		};
 			// 	};
 			// };
+            /*
+             * DSI_PWR_EN (P45-1): enables 5V->3.3V and also enables 5V to panel/backlight.
+             */
+            dsi_pwr: dsi-pwr {
+                compatible = "regulator-fixed";
+                regulator-name = "dsi-pwr-en";
+                regulator-min-microvolt = <3300000>;
+                regulator-max-microvolt = <3300000>;
+                gpio = <&pinctrl RZG2L_GPIO(45, 1) GPIO_ACTIVE_HIGH>;
+                enable-active-high;
+                /* enforce >= 100us before SN65 enable-gpios is asserted */
+                startup-delay-us = <150000>;
+                /* If 5V input regulator exists in base DTS, link it: */
+                vin-supply = <&reg_5p0v>;
+            };
 
-			edp_1v2: vdd-1p2v {
-				compatible = "regulator-fixed";
-				regulator-name = "edp_1v2";
-				regulator-min-microvolt = <1200000>;
-				regulator-max-microvolt = <1200000>;
-				regulator-always-on;
-			};
-			edp_1v8: vdd-1p8v {
-				compatible = "regulator-fixed";
-				regulator-name = "edp_1v8";
-				regulator-min-microvolt = <1800000>;
-				regulator-max-microvolt = <1800000>;
-				regulator-always-on;
-			};
-			dsi_pwr_en: dsi-pwr-en {
-				compatible = "regulator-fixed";
-				regulator-name = "dsi-pwr-en";
-				regulator-min-microvolt = <3300000>;
-				regulator-max-microvolt = <3300000>;
-				gpio = <&pinctrl RZG2L_GPIO(45, 1) GPIO_ACTIVE_HIGH>;
-				enable-active-high;
-				regulator-always-on;
+            edp_1v8: vdd-1p8v {
+                compatible = "regulator-fixed";
+                regulator-name = "edp_1v8";
+                regulator-min-microvolt = <1800000>;
+                regulator-max-microvolt = <1800000>;
+                /* 1.8V exists only when DSI power switch is on */
+                vin-supply = <&dsi_pwr>;
+            };
+            edp_1v2: vdd-1p2v {
+                compatible = "regulator-fixed";
+                regulator-name = "edp_1v2";
+                regulator-min-microvolt = <1200000>;
+                regulator-max-microvolt = <1200000>;
+                vin-supply = <&dsi_pwr>;
+            };
+			sn65dsi86_refclk: sn65dsi86-refclk {
+				compatible = "fixed-clock";
+				#clock-cells = <0>;
+
+				clock-frequency = <27000000>;
 			};
 		};
 	};
@@ -76,16 +88,22 @@
 		compatible = "ti,sn65dsi86";
 
 		reg = <0x2c>;
-		enable-gpios = <&pinctrl RZG2L_GPIO(22, 1) GPIO_ACTIVE_HIGH>;
-
-		interrupt-parent = <&pinctrl>;
-		interrupts = <RZG2L_GPIO(45, 2) IRQ_TYPE_LEVEL_LOW>;
-		irq-gpios = <&pinctrl RZG2L_GPIO(45, 2) GPIO_ACTIVE_HIGH>;
-
 		vccio-supply = <&edp_1v8>;
 		vpll-supply = <&edp_1v8>;
 		vcca-supply = <&edp_1v2>;
 		vcc-supply = <&edp_1v2>;
+
+		/* DSI_EN (P22-1) */
+		enable-gpios = <&pinctrl RZG2L_GPIO(22, 1) GPIO_ACTIVE_HIGH>;
+		/* IRQ (P45-2) */
+		interrupt-parent = <&pinctrl>;
+		interrupts = <RZG2L_GPIO(45, 2) IRQ_TYPE_LEVEL_HIGH>;
+		irq-gpios = <&pinctrl RZG2L_GPIO(45, 2) GPIO_ACTIVE_HIGH>;
+
+		clocks = <&sn65dsi86_refclk>;
+		clock-names = "refclk";
+
+		no-hpd;
 
 		ports {
 			#address-cells = <1>;
@@ -102,16 +120,20 @@
 			port@1 {
 				reg = <1>;
 				bridge_out: endpoint {
-					data-lanes = <0 1>;
 					remote-endpoint = <&panel_in>;
+					data-lanes = <0 1>;
 				};
 			};
 		};
 
 		aux-bus {
 			panel {
-				compatible = "auo,b140han06";
-				power-supply = <&dsi_pwr_en>;
+				compatible = "boe,nv156fhm-n42";
+				// compatible = "auo,b140han06";
+				// compatible = "auo,b133han05";
+				// compatible = "boe,nv140fhmn49";
+				// compatible = "panel-edp";
+				power-supply = <&dsi_pwr>;
 				backlight = <&backlight>;
 				port {
 					panel_in: endpoint {
@@ -148,5 +170,7 @@
 
 &backlight {
 	status = "okay";
+	power-supply = <&dsi_pwr>;
+	/* BL_EN (P45-0) */
 	enable-gpios = <&pinctrl RZG2L_GPIO(45, 0) GPIO_ACTIVE_HIGH>;
 };

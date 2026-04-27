@@ -71,7 +71,7 @@
 		compatible = "renesas,mmngrbuf";
 	};
 
-	vspm_if {
+	vspm-if {
 		compatible = "renesas,vspm_if";
 	};
 
@@ -143,13 +143,13 @@
 		regulator-always-on;
 	};
 
-	audio_mclock: audio_mclock {
+	audio_mclock: audio-mclock {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <11289600>;
 	};
 
-	clk_ext_camera: clk_ext_camera {
+	clk_ext_camera: clk-ext-camera {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
 		clock-frequency = <24000000>;
@@ -157,7 +157,7 @@
 
 	leds {
 		compatible = "gpio-leds";
-		led_red {
+		led-red {
 			gpios = <&pinctrl RZG2L_GPIO(43, 3) GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";
 			default-state = "on";
@@ -170,7 +170,7 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 		pinctrl-0 = <&user_key_pin>;
-		user_key@1 {
+		user-key@1 {
 			reg = <1>;
 			interrupt-parent = <&irqc>;
 			interrupts = <RZG2L_IRQ6 IRQ_TYPE_EDGE_BOTH>;
@@ -207,7 +207,7 @@
 		};
 	};
 
-	avt_codec: avt_codec {
+	avt_codec: avt-codec {
 		compatible = "avt,lite-codec-audio";
 		#sound-dai-cells = <1>;
 	};
@@ -246,7 +246,7 @@
 		compatible = "pwm-backlight";
 		pwms = <&gpt3 0 40000 0>;
 		brightness-levels = <0 8 32 64 96 128 160 192 224 255>;
-		default-brightness-level = <8>;
+		default-brightness-level = <9>;
 		power-supply = <&reg_5p0v>;
 		status = "disabled";
 	};
@@ -617,7 +617,7 @@
 	pinctrl-0 = <&sound_clk_pins>;
 	pinctrl-names = "default";
 
-	user_key_pin: user_key {
+	user_key_pin: user-key {
 		pinmux = <RZG2L_PORT_PINMUX(43, 2, 4)>;	/* IRQ6 */
 	};
 
