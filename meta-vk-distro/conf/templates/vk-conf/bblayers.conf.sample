@@ -6,17 +6,26 @@ BBPATH = "${TOPDIR}"
 BBFILES ?= ""
 
 BBLAYERS ?= " \
-  ${TOPDIR}/../poky/meta \
-  ${TOPDIR}/../poky/meta-poky \
-  ${TOPDIR}/../poky/meta-yocto-bsp \
-  ${TOPDIR}/../meta-openembedded/meta-oe \
-  ${TOPDIR}/../meta-openembedded/meta-python \
-  ${TOPDIR}/../meta-openembedded/meta-multimedia \
-  ${TOPDIR}/../meta-arm/meta-arm-toolchain \
-  ${TOPDIR}/../meta-arm/meta-arm \
-  ${TOPDIR}/../meta-renesas/meta-rz-bsp \
-  ${TOPDIR}/../meta-renesas/meta-rz-distro \
-  ${TOPDIR}/../meta-vkboards/meta-vk-bsp \
-  ${TOPDIR}/../meta-vkboards/meta-vk-distro \
-  ${TOPDIR}/../meta-rz-features/meta-rz-graphics \
+  ${TOPDIR}/../layers/poky/meta \
+  ${TOPDIR}/../layers/poky/meta-poky \
+  ${TOPDIR}/../layers/poky/meta-yocto-bsp \
+  ${TOPDIR}/../layers/meta-openembedded/meta-oe \
+  ${TOPDIR}/../layers/meta-openembedded/meta-python \
+  ${TOPDIR}/../layers/meta-openembedded/meta-multimedia \
+  ${TOPDIR}/../layers/meta-arm/meta-arm-toolchain \
+  ${TOPDIR}/../layers/meta-arm/meta-arm \
+  ${TOPDIR}/../layers/meta-renesas/meta-rz-bsp \
+  ${TOPDIR}/../layers/meta-renesas/meta-rz-distro \
+  ${TOPDIR}/../layers/meta-rz-features/meta-rz-graphics \
+  ${TOPDIR}/../layers//meta-clang \
+  ${TOPDIR}/../layers//meta-lts-mixins \
+  ${TOPDIR}/../layers//meta-browser/meta-chromium \
+  ${TOPDIR}/../layers//meta-openembedded/meta-networking \
+  ${TOPDIR}/../layers//meta-browser-hwdecode \
+  ${TOPDIR}/../layers//meta-rz-features/meta-rz-flutter \
+  ${TOPDIR}/../layers//meta-flutter \
+  ${TOPDIR}/../layers//meta-flutter/meta-flutter-apps \
+  ${TOPDIR}/../layers//meta-rz-demos \
+  ${TOPDIR}/..//layers/meta-vkboards/meta-vk-bsp \
+  ${TOPDIR}/..//layers/meta-vkboards/meta-vk-distro \
   "

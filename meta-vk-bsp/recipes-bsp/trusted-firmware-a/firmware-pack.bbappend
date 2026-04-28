@@ -1,7 +1,5 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-DEPENDS:append = " fiptool-native"
-
 SYSROOT_UBOOT="${RECIPE_SYSROOT}/boot"
 
 do_compile() {
@@ -17,7 +15,7 @@ do_compile() {
 
 	if [ -n "${UBOOT_CONFIG}" ]; then
 	     for config in ${UBOOT_CONFIG}; do
-		fiptool create --align 16 --soc-fw ${SYSROOT_TFA}/bl31.bin --nt-fw ${SYSROOT_UBOOT}/u-boot.bin-${config} ${S}/fip_${config}.bin
+		${SYSROOT_TFA}/fiptool create --align 16 --soc-fw ${SYSROOT_TFA}/bl31.bin --nt-fw ${SYSROOT_UBOOT}/u-boot.bin-${config} ${S}/fip_${config}.bin
 		objcopy -I binary -O srec --adjust-vma=${FIP_ADJUST_VMA} --srec-forceS3 ${S}/fip_${config}.bin ${S}/fip_${config}.srec
 	     done
 	fi

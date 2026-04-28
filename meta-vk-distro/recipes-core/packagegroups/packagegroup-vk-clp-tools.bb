@@ -13,7 +13,7 @@ PACKAGES = " \
 	packagegroup-vk-clp-tools-utils \
 "
 
-RDEPENDS:packagegroup-vk-vlp-tools = " \
+RDEPENDS:packagegroup-vk-clp-tools = " \
 	packagegroup-vk-clp-tools-base \
 	packagegroup-vk-clp-tools-utils \
 "
@@ -30,6 +30,7 @@ RDEPENDS:packagegroup-vk-clp-tools-base = " \
 	tcf-agent \
 	watchdog \
 	mmc-utils \
+	mxt-app \
 "
 
 RDEPENDS:packagegroup-vk-clp-tools-utils = " \

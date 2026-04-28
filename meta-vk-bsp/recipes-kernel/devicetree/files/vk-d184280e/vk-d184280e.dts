@@ -257,7 +257,6 @@
 
 
 #if WIFI_MODULE_1YN
-
 /* Wifi */
 &sdhi1 {
 	status = "okay";
@@ -403,7 +402,7 @@
 #endif
 #if KD070HDFIA030
 	gt9271: gt9271_ts@5d {
-		compatible = "goodix,gt911"; 
+		compatible = "goodix,gt911";
 		reg = <0x5d>;
 
 		status = "okay";

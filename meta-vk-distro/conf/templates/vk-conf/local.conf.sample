@@ -285,6 +285,13 @@ LICENSE_FLAGS_ACCEPTED = " \
         commercial_gstreamer1.0-omx \
 "
 
+# mxt-app (Atmel maXTouch configuration utility) carries the ATMEL Limited
+# License Agreement, which restricts use to "Atmel SAM9 and SAMA5 families."
+# The MXT1066T2 controller on VK-D184280E is an Atmel/Microchip maXTouch
+# product, not SAM9/SAMA5.  Review meta-vk-bsp/licenses/ATMEL_LLA and confirm
+# acceptability for your deployment before uncommenting this line.
+#LICENSE_FLAGS_ACCEPTED += "atmel_lla"
+
 #
 # Memory Resident Bitbake
 #
@@ -305,3 +312,6 @@ CONF_VERSION = "2"
 
 # Un-comment a following line to select RTLinux.
 # PREFERRED_PROVIDER_virtual/kernel = "linux-renesas-rt"
+
+# Un-comment a following line to enable HASSI support in kernel.
+# CONFIG_HASSI = "1"

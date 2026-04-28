@@ -8,8 +8,6 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-#require include/device-tree.inc
-
 SRC_URI = " \
     ${@' '.join(['file://%s' % f for f in d.getVar('KERNEL_DTS').split()])} \
     ${@' '.join(['file://%s' % f for f in d.getVar('KERNEL_DEVICETREE_OVERLAY').split()])} \
@@ -55,7 +53,7 @@ do_compile() {
 			-o ${output_file} \
 			${preprocessed_file}
 
-		#rm -f ${preprocessed_file}
+		rm -f ${preprocessed_file}
     }
 
     # Compile standard DTBs (without -@)

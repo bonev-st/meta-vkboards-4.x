@@ -1,6 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-UBOOT_REV ?= "b105c304da659417de099e50af1a0fce7aa85164"
+UBOOT_REV:vkrzg2lc = "5141064c1552accaf69c6f509bf21b2063b9cff5"
+UBOOT_REV:vk-d184280e = "5141064c1552accaf69c6f509bf21b2063b9cff5"
 
 SRC_URI:append = " \
 	file://0001-add-support-for-cm33-command.patch \
